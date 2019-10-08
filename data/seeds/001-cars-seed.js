@@ -1,7 +1,7 @@
 //pre-populate our database with sample data in order to see it in action. 
 //Seeds allow us to easily add and reset sample data.
 
-exports.seed = function(knex, Promise) {
+exports.seed = function(knex) {//removed promise from function parameter
   // delete - Deletes ALL existing entries
   //if you leave off truncate or delete you will get a sqlite error because of the unique constraint
   //so we need to truncate new information before we seed new data
