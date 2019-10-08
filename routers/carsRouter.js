@@ -21,6 +21,21 @@ carsRouter.get('/', (req, res) => {
     })
 })
 
+
+carsRouter.get('/:VIN', validateVIN, (req, res) => {
+
+    const {VIN} = req.params;
+
+    carsDB('cars')
+    .where( {VIN} )
+    .then(car => {
+        res.status(200).json(car);
+    })
+    .catch(error => {
+        res.status(500).json( {error: 'There was an error retrieving the car from the database.'} );
+    })
+})
+
 carsRouter.post('/', (req, res) => {
 
     const carsData = req.body;
@@ -49,13 +64,13 @@ carsRouter.put('/:VIN', (req, res) => {
         res.status(200).json( {message: `${count} records were updated.`} );
     })
     .catch(error => {
+        console.log("update error", error);
         res.status(500).json( {error: 'There was an error updating the record in the database.'} );
     })
 
-
 })
 
-carsRouter.delete('/:VIN', (req, res) => {
+carsRouter.delete('/:VIN', validateVIN, (req, res) => {
 
     const {VIN} = req.params;
 
@@ -70,6 +85,26 @@ carsRouter.delete('/:VIN', (req, res) => {
         res.status(500).json( {error: 'There was an error deleting the record(s) from the database.'} );
     })
 })
+
+//custom middleware
+//custom/local middleware
+function validateVIN(req, res, next){
+
+    const {VIN} = req.params;
+
+    carsDB('cars')
+    .where( {VIN} )
+    .then(car => {
+        if( (car.length > 0) ){
+            next();
+        }
+        else {
+            res.status(404).json( {message: 'A car with that VIN does not exist.'} );
+        }
+    })
+    
+
+};
 
 
 //export router
