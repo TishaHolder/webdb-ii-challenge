@@ -36,7 +36,7 @@ carsRouter.get('/:VIN', validateVIN, (req, res) => {
     })
 })
 
-carsRouter.post('/', (req, res) => {
+carsRouter.post('/', validateCarInfo, (req, res) => {
 
     const carsData = req.body;
 
@@ -52,7 +52,7 @@ carsRouter.post('/', (req, res) => {
 
 })
 
-carsRouter.put('/:VIN', (req, res) => {
+carsRouter.put('/:VIN', validateVIN, validateCarInfo, (req, res) => {
      
     const {VIN} = req.params;
     const changes = req.body;
@@ -102,6 +102,26 @@ function validateVIN(req, res, next){
             res.status(404).json( {message: 'A car with that VIN does not exist.'} );
         }
     })
+    
+
+};
+
+function validateCarInfo(req, res, next){
+
+    const carData = req.body;
+
+    if(!carData.make){
+        res.status(400).json( {message: 'Missing car make.'} );
+    }
+    else if(!carData.model){
+        res.status(400).json( {message: 'Missing car model.'} );
+    }
+    else if(!carData.mileage){
+        res.status(400).json( {message: 'Missing car mileage.'} );
+    }   
+    else {
+        next();
+    }
     
 
 };
