@@ -1,6 +1,8 @@
 
 exports.up = function(knex, Promise) {
-    return knex.schema.createTable('cars', tbl => {//up represents the changes we want to make to our schema
+    return knex.schema.createTable('cars', tbl => {//up represents the changes we want to make to our schema  
+        //tbl.string('VIN', 25).notNullable().unique().primary();  
+        //make numbers string if you will not be performing mathematical operations on it    
         tbl.increments('VIN');//auto incrementing primary key
         tbl.string('make', 128)
             .notNullable();
@@ -8,7 +10,8 @@ exports.up = function(knex, Promise) {
             .notNullable();
         tbl.integer('mileage')
             .notNullable();
-        tbl.string('transmissiontype', 1024);
+        //don't use spaces in table or column names (use underscores, dashes, or camelCasing)
+        tbl.string('transmissiontype', 1024); //could use .defaultsTo('value-here')
         tbl.string('titlestatus', 128);
     })
   
